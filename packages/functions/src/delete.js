@@ -9,6 +9,14 @@ export const main = handler(async (event) => {
             urlId: event.pathParameters.id, // The id of the shortened url from the path
         },
     };
+
+    // we can remove this validation to improve performance
+    const result = await dynamoDb.get(params);
+    if (!result.Item) {
+        throw new Error("The resource you are trying to delete does not exist in the DB");
+    }
+
     await dynamoDb.delete(params);
+
     return {status: true};
 });

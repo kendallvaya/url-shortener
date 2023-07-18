@@ -8,6 +8,7 @@ export const main = handler(async (event) => {
     // Request body is passed in as a JSON encoded string in 'event.body'
     const data = JSON.parse(event.body);
 
+    // check if the provided url is valid
     if(!checkIfUrlIsValid(data.originalUrl)) {
         throw new Error("Provided URL is not valid");
     }
@@ -30,6 +31,11 @@ export const main = handler(async (event) => {
   
 });
 
+/**
+ * create a random string as the id for the shortened url
+ * @param {*} originalUrl 
+ * @returns 
+ */
 function createShortUrl(originalUrl) {
     let charMap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let shorturl = [];
@@ -42,6 +48,11 @@ function createShortUrl(originalUrl) {
     return shorturl.join("");
 }
 
+/**
+ * make sure the created random string does not exist as an id in the DB
+ * @param {*} originalUrl 
+ * @returns 
+ */
 async function getUniqueShortUrl(originalUrl) {
     console.log("getting unirque url");
     let urlIdIsUnique = false;
@@ -66,6 +77,11 @@ async function getUniqueShortUrl(originalUrl) {
     return uniqueShortUrl;
 }
 
+/**
+ * Check if the provided url is valid before creating a shortened url
+ * @param {*} url 
+ * @returns 
+ */
 function checkIfUrlIsValid(url) {
     try {
         new URL(url);
